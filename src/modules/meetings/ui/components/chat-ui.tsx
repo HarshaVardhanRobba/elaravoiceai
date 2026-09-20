@@ -1,3 +1,5 @@
+"use client";
+
 import type { Channel as StreamChannel } from "stream-chat";
 import "stream-chat-react/dist/css/v2/index.css";
 import {
@@ -11,8 +13,9 @@ import {
 } from "stream-chat-react";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/loading-state";
+import { ErrorState } from "@/components/error-state";
 
 interface ChatUIProps {
   meetingId: string;
@@ -24,7 +27,6 @@ interface ChatUIProps {
 
 export const ChatUI = ({
   meetingId,
-  meetingName,
   userId,
   userName,
   userImage,
@@ -36,10 +38,23 @@ export const ChatUI = ({
   );
 
   const [channel, setChannel] = useState<StreamChannel>();
+  const [tokenError, setTokenError] = useState(false);
+
+  // useCreateChatClient never reports a failed token, it just stays null
+  // forever, so track the failure here to show an error instead of a spinner.
+  const tokenProvider = useCallback(async () => {
+    try {
+      return await generateChatToken();
+    } catch (err) {
+      console.error("Failed to get chat token", err);
+      setTokenError(true);
+      throw err;
+    }
+  }, [generateChatToken]);
 
   const client = useCreateChatClient({
     apiKey: process.env.NEXT_PUBLIC_STREAM_CHAT_API_KEY!,
-    tokenOrProvider: generateChatToken,
+    tokenOrProvider: tokenProvider,
     userData: {
       id: userId,
       name: userName,
@@ -55,7 +70,18 @@ export const ChatUI = ({
       members: [userId],
     });
     setChannel(channel);
-  }, [client, meetingId, meetingName, userId]);
+  }, [client, meetingId, userId]);
+
+  if (tokenError) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <ErrorState
+          title="Couldn't load the chat"
+          description="Your session may have expired. Refresh the page and try again."
+        />
+      </div>
+    );
+  }
 
   if (!client) {
     return (

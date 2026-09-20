@@ -16,17 +16,25 @@ export const CallView = ({ meetingId }: CallViewProps) => {
     trpc.meetings.getOne.queryOptions({ id: meetingId })
   );
 
-  // Handle completed or cancelled meetings
-  if (data.status === "completed" || data.status === "cancelled") {
+  // Handle meetings that can no longer be joined. "pending" means the call
+  // already ended and the summary is still being generated.
+  if (
+    data.status === "completed" ||
+    data.status === "cancelled" ||
+    data.status === "pending"
+  ) {
+    const title =
+      data.status === "completed"
+        ? "Meeting Completed"
+        : data.status === "pending"
+          ? "Meeting Ended"
+          : "Meeting Cancelled";
+
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="w-full max-w-md">
           <ErrorState
-            title={
-              data.status === "completed"
-                ? "Meeting Completed"
-                : "Meeting Cancelled"
-            }
+            title={title}
             description="You can no longer join this meeting."
           />
         </div>

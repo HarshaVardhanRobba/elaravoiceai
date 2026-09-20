@@ -272,6 +272,22 @@ export const meetingsRouter = createTRPCRouter({
         },
       ]);
 
+      // The agent also needs a Stream Chat identity so its Ask AI replies
+      // render with its own name and avatar. Not fatal: the webhook upserts
+      // it again when it replies.
+      try {
+        await streamChat.upsertUser({
+            id: existingAgent.id,
+            name: existingAgent.name,
+            image: GenerateAvatarUri({
+                seed: existingAgent.name,
+                variant: "botttsNeutral",
+            }),
+        });
+      } catch (err) {
+        console.error("Failed to upsert agent in Stream Chat", err);
+      }
+
     return createdMeeting;
   }),
   update: protectedProcedure

@@ -6,6 +6,7 @@ import { name } from "@stream-io/video-react-sdk";
 import { eq, inArray } from "drizzle-orm";
 import JSONL from "jsonl-parse-stringify";
 import { createAgent, openai, TextMessage } from "@inngest/agent-kit";
+import { promoteMeetingIfReady } from "@/modules/meetings/server/promote-meeting";
 
 const summerizer = createAgent({
   name: "summerizer",
@@ -106,10 +107,14 @@ export const meetingsProcessing = inngest.createFunction(
         .update(meetings)
         .set({ 
           summary: (output[0] as TextMessage).content as string,
-          status: "completed",
          })
         .where(
           eq(meetings.id, event.data.meetingId))
-    })
+    });
+
+    // Only flips to "completed" once transcript + recording exist as well.
+    await step.run("promote-meeting", async () => {
+      await promoteMeetingIfReady(event.data.meetingId);
+    });
   },
 );

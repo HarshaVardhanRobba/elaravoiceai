@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MeetingsGetOne } from "../../types";
@@ -16,9 +19,20 @@ interface CompletedStateProps {
 }
 
 export const CompletedState = ({ data }: CompletedStateProps) => {
+    // The chat opens a Stream connection, so only mount it once the user
+    // opens the tab, then keep it mounted (forceMount) so switching tabs does
+    // not tear the connection down and rebuild it every time.
+    const [chatOpened, setChatOpened] = useState(false);
+
     return (
         <div className="w-full max-w-5xl mx-auto px-6 py-6">
-            <Tabs defaultValue="summary" className="w-full">
+            <Tabs
+                defaultValue="summary"
+                className="w-full"
+                onValueChange={(value) => {
+                    if (value === "chat") setChatOpened(true);
+                }}
+            >
                 {/* Tabs header */}
                 <ScrollArea>
                     <TabsList className="mb-6 h-auto gap-2 bg-transparent p-0">
@@ -57,8 +71,14 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
                     <ScrollBar orientation="horizontal" />
                 </ScrollArea>
 
-                <TabsContent value="chat">
-                    <ChatProvider meetingName={data.name} meetingId={data.id} />
+                <TabsContent
+                    value="chat"
+                    forceMount
+                    className="data-[state=inactive]:hidden"
+                >
+                    {chatOpened && (
+                        <ChatProvider meetingName={data.name} meetingId={data.id} />
+                    )}
                 </TabsContent>
                 <TabsContent value="transcript">
                     <Transcript meetingId={data.id} />

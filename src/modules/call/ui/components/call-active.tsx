@@ -16,7 +16,7 @@ export const CallActive = ({
 
       {/* HEADER */}
       <div className="flex items-center gap-3 px-4 py-2 bg-neutral-900">
-        <Link href="/">
+        <Link href="/meetings">
           <Image 
             src="/logo.svg"
             alt="logo"

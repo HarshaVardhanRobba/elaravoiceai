@@ -33,8 +33,12 @@ export const MeetingIdView = ({ meetingsId }: MeetingIdViewProps) => {
   const { data, refetch } = useSuspenseQuery({
     ...trpc.meetings.getOne.queryOptions({ id: meetingsId }),
     refetchInterval: (query) => {
-      // Poll every 2 seconds if meeting is active, otherwise disable polling
-      return query.state.data?.status === "active" ? 2000 : false;
+      // Poll while the meeting is still changing: live (active) and while
+      // the summary / transcript / recording are being generated (pending).
+      const status = query.state.data?.status;
+      if (status === "active") return 2000;
+      if (status === "pending") return 3000;
+      return false;
     },
   });
 

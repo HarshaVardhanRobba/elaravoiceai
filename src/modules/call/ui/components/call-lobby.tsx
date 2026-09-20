@@ -14,6 +14,7 @@ import Link from "next/link";
 
 interface CallLobbyProps {
   onJoin: () => void;
+  isJoining?: boolean;
 }
 
 const DisabledVideoPreview = () => {
@@ -44,7 +45,7 @@ const AllowBrowserPermissions = () => {
   );
 };
 
-export const CallLobby = ({ onJoin }: CallLobbyProps) => {
+export const CallLobby = ({ onJoin, isJoining = false }: CallLobbyProps) => {
   const { useCameraState, useMicrophoneState } = useCallStateHooks();
 
   const { hasBrowserPermission: hasMicPermission } =
@@ -91,10 +92,10 @@ export const CallLobby = ({ onJoin }: CallLobbyProps) => {
           <div className="flex flex-col gap-3">
             <button
               onClick={onJoin}
-              disabled={!hasBrowserMediaPermission}
+              disabled={!hasBrowserMediaPermission || isJoining}
               className="w-full rounded-lg bg-primary text-primary-foreground py-2.5 font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Join Call
+              {isJoining ? "Joining..." : "Join Call"}
             </button>
 
             <Link
