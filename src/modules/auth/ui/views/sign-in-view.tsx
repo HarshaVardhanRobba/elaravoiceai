@@ -45,7 +45,7 @@ export const SignInView = () => {
     authClient.signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: "/",
+      callbackURL: "/meetings",
     },
     {
       onSuccess: () => {
@@ -135,7 +135,7 @@ export const SignInView = () => {
                   onClick={() => {
                       authClient.signIn.social({
                           provider: "google",
-                          callbackURL: "/"
+                          callbackURL: "/meetings"
                       })
                   }}
                   variant="outline" 

@@ -9,7 +9,7 @@ const Page = async () => {
     });
   
     if (!!session) {
-      redirect('/');
+      redirect('/meetings');
     }
   return <SignInView />;
 }

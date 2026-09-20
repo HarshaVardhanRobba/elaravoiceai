@@ -1,191 +1,203 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { DM_Sans, Fraunces } from "next/font/google";
+
+const display = Fraunces({ subsets: ["latin"], weight: ["400", "600"] });
+const body = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600"] });
+
+const BARS = [24, 46, 72, 40, 96, 60, 110, 84, 50, 100, 66, 36, 78, 28];
+
+const STEPS = [
+  {
+    title: "Write its instructions",
+    text: "Create an agent and tell it who it is and how to behave: a note-taker, an interviewer, a coach. Those instructions stay with it.",
+  },
+  {
+    title: "Start a meeting",
+    text: "Pick the agent, open the call and it joins right away, speaking and listening over live video with transcription and recording on.",
+  },
+  {
+    title: "Get the summary",
+    text: "When the call ends, Elara processes the transcript in the background and marks the meeting completed with a summary ready to read.",
+  },
+];
+
+const FEATURES = [
+  { title: "Real-time voice", text: "Natural back-and-forth speech in the call, powered by a realtime voice model." },
+  { title: "Custom agents", text: "Create as many agents as you need, each with its own instructions you can edit any time." },
+  { title: "Transcripts and recordings", text: "Every call is transcribed and recorded, and stored against the meeting for later." },
+  { title: "AI summaries", text: "A written summary of each meeting is generated automatically once the transcript is ready." },
+  { title: "Post-call chat", text: "Ask the agent follow-up questions afterwards. It answers from the summary and chat history." },
+  { title: "Search and filter", text: "Find any meeting by name, agent or status, with paginated lists for agents and meetings." },
+];
+
+const pillPrimary =
+  "rounded-full bg-[#0F766E] px-7 py-4 text-[17px] font-semibold text-white transition hover:bg-[#0B5C56]";
+const pillOutline =
+  "rounded-full border border-[#14181F] px-6 py-4 text-[17px] font-medium text-[#14181F] transition hover:bg-[#14181F] hover:text-[#F4F1EA]";
 
 export default function HomeView() {
   return (
-    <main className="relative overflow-hidden bg-[#050b08] text-white">
-
-      {/* Neon Glow Layers */}
-      <div className="absolute -top-60 left-1/2 h-[900px] w-[900px] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-[200px] pointer-events-none" />
-      <div className="absolute top-[40%] -right-40 h-[700px] w-[700px] rounded-full bg-lime-400/10 blur-[180px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 h-[600px] w-[600px] rounded-full bg-green-500/10 blur-[160px] pointer-events-none" />
+    <div className={`${body.className} min-h-screen bg-[#F4F1EA] text-[#14181F]`}>
+      {/* NAV */}
+      <header className="mx-auto flex h-[88px] max-w-[1440px] items-center justify-between px-6 lg:px-24">
+        <div className={`${display.className} text-[30px] font-semibold tracking-tight`}>Elara</div>
+        <nav className="hidden gap-10 text-base text-[#4A505B] md:flex">
+          <a href="#how" className="hover:text-[#14181F]">How it works</a>
+          <a href="#features" className="hover:text-[#14181F]">Features</a>
+          <a href="#summaries" className="hover:text-[#14181F]">Summaries</a>
+        </nav>
+        <div className="flex items-center gap-3">
+          <Link href="/sign-in" className="px-5 py-3 text-base font-medium">Sign in</Link>
+          <Link
+            href="/sign-up"
+            className="rounded-full bg-[#14181F] px-[22px] py-3 text-base font-medium text-[#F4F1EA] transition hover:bg-[#232A34]"
+          >
+            Get started
+          </Link>
+        </div>
+      </header>
 
       {/* HERO */}
-      <section className="relative flex min-h-screen items-center justify-center px-6 text-center bg-gradient-to-b from-[#061a14] via-[#071f18] to-[#050b08]">
-        <div className="max-w-5xl space-y-10">
-
-          <motion.h1
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
-            className="text-5xl sm:text-7xl font-bold tracking-tight leading-tight"
+      <section className="mx-auto flex max-w-[1440px] flex-col items-center gap-16 px-6 py-16 lg:flex-row lg:px-24 lg:py-20">
+        <div className="flex flex-1 flex-col gap-7">
+          <div className="text-sm font-semibold uppercase tracking-[0.08em] text-[#0F766E]">
+            AI voice agent for meetings
+          </div>
+          <h1
+            className={`${display.className} text-5xl font-normal leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-[76px]`}
           >
-            <span className="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">
-              Meetings that think.
-            </span>
-          </motion.h1>
+            Your meetings, with a teammate who actually listens.
+          </h1>
+          <p className="max-w-[540px] text-xl leading-[1.55] text-[#4A505B]">
+            Elara joins your video call as a live voice agent you have instructed, talks with everyone
+            in real time, then hands you the transcript, recording and a written summary.
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-3.5">
+            <Link href="/sign-up" className={pillPrimary}>Create your first agent</Link>
+            <a href="#how" className={pillOutline}>See how it works</a>
+          </div>
+        </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-lg sm:text-xl text-emerald-200/70 max-w-2xl mx-auto"
-          >
-            Real-time AI agents that join your calls, understand context,
-            and generate structured summaries automatically.
-          </motion.p>
-
-          <div className="flex justify-center gap-6 pt-6">
-
-            <Link
-              href="/sign-up"
-              className="rounded-xl bg-emerald-400 px-8 py-4 text-black font-semibold shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:bg-emerald-300 transition"
-            >
-              Get Started
-            </Link>
-
-            <Link
-              href="/dashboard"
-              className="rounded-xl border border-emerald-400/30 px-8 py-4 font-medium text-emerald-200 hover:bg-emerald-500/10 transition"
-            >
-              View Demo
-            </Link>
-
+        <div className="flex w-full max-w-[600px] flex-col gap-[22px] rounded-[28px] bg-[#14181F] p-7 text-[#F4F1EA] lg:w-[600px] lg:shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="text-[15px] text-[#A9AFBA]">Weekly product sync</div>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="block size-2 rounded-full bg-[#F2664B]" />
+              Live
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex h-[200px] flex-1 items-end rounded-[18px] bg-[#232A34] p-3.5 text-sm">You</div>
+            <div className="flex h-[200px] flex-1 flex-col justify-between rounded-[18px] bg-[#0F766E] p-3.5">
+              <div className="flex h-[130px] items-center justify-center gap-1" aria-hidden="true">
+                {BARS.map((h, i) => (
+                  <div
+                    key={i}
+                    className={`w-1.5 rounded-full bg-[#F4F1EA] ${i % 3 === 0 ? "opacity-70" : ""}`}
+                    style={{ height: h }}
+                  />
+                ))}
+              </div>
+              <div className="text-sm">Elara &middot; speaking</div>
+            </div>
+          </div>
+          <div className="rounded-2xl bg-[#232A34] px-5 py-[18px] text-base leading-normal text-[#E4E0D6]">
+            &ldquo;Two open items from last week: the pricing page copy and the webhook retry logic.
+            Want me to walk through both?&rdquo;
           </div>
         </div>
       </section>
 
-      {/* LIVE PREVIEW */}
-      <section className="py-32 px-6">
-        <div className="max-w-6xl mx-auto space-y-20">
-
-          <motion.div
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6"
-          >
-            <h2 className="text-4xl sm:text-5xl font-semibold text-emerald-300">
-              Real-time AI participation
-            </h2>
-            <p className="text-emerald-200/60 max-w-2xl mx-auto">
-              Elara joins your call, listens, understands context,
-              and responds instantly using streaming GPT models.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="rounded-3xl border border-emerald-400/20 bg-[#0b1a14] p-10 shadow-[0_0_40px_rgba(16,185,129,0.2)]"
-          >
-            <div className="aspect-video bg-[#07140f] rounded-2xl flex items-center justify-center text-emerald-300/50 text-lg border border-emerald-400/10">
-              AI Live Call Preview
-            </div>
-          </motion.div>
-
-        </div>
-      </section>
-
       {/* HOW IT WORKS */}
-      <section className="py-32 px-6 bg-[#06130f]">
-        <div className="max-w-5xl mx-auto space-y-20">
-
-          <h2 className="text-4xl sm:text-5xl font-semibold text-center text-emerald-300">
-            How it works
-          </h2>
-
-          {[
-            "Create a meeting with your AI agent",
-            "Agent joins your call in real-time",
-            "Transcript processed & summarized automatically",
-            "Continue conversation post-call with full memory"
-          ].map((step, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -80 : 80 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-              viewport={{ once: true }}
-              className="rounded-2xl border border-emerald-400/10 bg-[#0b1a14] p-10 shadow-[0_0_25px_rgba(16,185,129,0.15)]"
-            >
-              <p className="text-xl font-medium text-emerald-200">{step}</p>
-            </motion.div>
+      <section id="how" className="mx-auto flex max-w-[1440px] flex-col gap-12 px-6 py-24 lg:px-24">
+        <h2
+          className={`${display.className} max-w-[900px] text-4xl font-normal leading-[1.1] tracking-[-0.02em] lg:text-5xl`}
+        >
+          From call to written record, without lifting a finger.
+        </h2>
+        <div className="grid gap-8 md:grid-cols-3">
+          {STEPS.map((s, i) => (
+            <div key={s.title} className="flex flex-col gap-3 border-t-2 border-[#14181F] pt-6">
+              <div className={`${display.className} text-xl text-[#0F766E]`}>{`0${i + 1}`}</div>
+              <div className="text-2xl font-semibold">{s.title}</div>
+              <div className="text-[17px] leading-[1.55] text-[#4A505B]">{s.text}</div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* FEATURE BLOCKS */}
-      <section className="py-32 px-6">
-        <div className="max-w-6xl mx-auto space-y-40">
-
-          <FeatureBlock
-            title="Durable event orchestration"
-            description="Inngest ensures transcript processing never fails, even during infrastructure outages."
-          />
-
-          <FeatureBlock
-            title="Persistent memory"
-            description="Meeting summaries and chat history remain context-aware across sessions."
-          />
-
-          <FeatureBlock
-            title="Multi-tenant isolation"
-            description="Secure user-level isolation with strict session-based filtering."
-          />
+      {/* FEATURES */}
+      <section id="features" className="mx-auto flex max-w-[1440px] flex-col gap-12 px-6 py-24 lg:px-24">
+        <h2
+          className={`${display.className} max-w-[900px] text-4xl font-normal leading-[1.1] tracking-[-0.02em] lg:text-5xl`}
+        >
+          Built for the whole meeting, not just the part on screen.
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f) => (
+            <div key={f.title} className="flex flex-col gap-2.5 rounded-[20px] border border-[#DDD8CC] bg-white p-7">
+              <div className="text-xl font-semibold">{f.title}</div>
+              <div className="text-base leading-[1.55] text-[#4A505B]">{f.text}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="py-32 px-6 text-center bg-gradient-to-t from-[#061a14] to-transparent">
-        <div className="max-w-3xl mx-auto space-y-10">
-          <h2 className="text-4xl sm:text-5xl font-bold text-emerald-300">
-            Start building intelligent meetings
-          </h2>
-
-          <Link
-            href="/sign-up"
-            className="inline-block rounded-2xl bg-emerald-400 px-10 py-5 text-lg text-black font-semibold shadow-[0_0_40px_rgba(16,185,129,0.6)] hover:bg-emerald-300 transition"
-          >
-            Launch Elara
-          </Link>
+      {/* SUMMARIES */}
+      <section id="summaries" className="bg-[#14181F] text-[#F4F1EA]">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-16 px-6 py-24 lg:flex-row lg:gap-20 lg:px-24">
+          <div className="flex flex-1 flex-col gap-6">
+            <div className="text-sm font-semibold uppercase tracking-[0.08em] text-[#5EC9BE]">After the call</div>
+            <h2
+              className={`${display.className} text-4xl font-normal leading-[1.1] tracking-[-0.02em] lg:text-5xl`}
+            >
+              Ask it what you missed.
+            </h2>
+            <p className="max-w-[480px] text-[19px] leading-[1.6] text-[#C9CEC6]">
+              The agent that sat in on your meeting stays available in chat. It remembers its instructions
+              and has the summary in hand, so follow-ups take one message.
+            </p>
+          </div>
+          <div className="flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-[#232A34] p-7 lg:w-[620px] lg:shrink-0">
+            <div className="max-w-[420px] self-end rounded-[18px] rounded-br-[4px] bg-[#F4F1EA] px-[18px] py-3.5 text-base leading-[1.45] text-[#14181F]">
+              What did we decide about the webhook retries?
+            </div>
+            <div className="max-w-[480px] self-start rounded-[18px] rounded-bl-[4px] bg-[#0F766E] px-[18px] py-3.5 text-base leading-[1.45] text-white">
+              Answers come from the meeting summary and transcript.
+            </div>
+            <div className="max-w-[420px] self-end rounded-[18px] rounded-br-[4px] bg-[#F4F1EA] px-[18px] py-3.5 text-base leading-[1.45] text-[#14181F]">
+              Who owns the follow-up?
+            </div>
+            <div className="max-w-[480px] self-start rounded-[18px] rounded-bl-[4px] bg-[#0F766E] px-[18px] py-3.5 text-base leading-[1.45] text-white">
+              The agent names the owner and next step, taken from what was said.
+            </div>
+          </div>
         </div>
       </section>
 
-    </main>
-  );
-}
-
-function FeatureBlock({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="grid md:grid-cols-2 gap-16 items-center"
-    >
-      <div className="aspect-square rounded-3xl bg-[#0b1a14] border border-emerald-400/10 shadow-[0_0_35px_rgba(16,185,129,0.15)]" />
-
-      <div className="space-y-6">
-        <h3 className="text-3xl sm:text-4xl font-semibold text-emerald-300">
-          {title}
-        </h3>
-        <p className="text-lg text-emerald-200/70">
-          {description}
+      {/* CTA */}
+      <section className="mx-auto flex max-w-[1440px] flex-col items-center gap-7 px-6 py-24 text-center lg:px-24">
+        <h2
+          className={`${display.className} max-w-[820px] text-5xl font-normal leading-[1.05] tracking-[-0.03em] lg:text-[60px]`}
+        >
+          Bring Elara to your next meeting.
+        </h2>
+        <p className="max-w-[560px] text-xl leading-normal text-[#4A505B]">
+          Sign in with Google, GitHub or email and have your first agent in a call in minutes.
         </p>
-      </div>
-    </motion.div>
+        <div className="flex flex-wrap justify-center gap-3.5">
+          <Link href="/sign-up" className={pillPrimary}>Get started</Link>
+          <a href="#how" className={pillOutline}>Learn more</a>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-[#DDD8CC]">
+        <div className="mx-auto flex h-[140px] max-w-[1440px] items-center justify-between px-6 lg:px-24">
+          <div className={`${display.className} text-2xl font-semibold`}>Elara</div>
+          <div className="text-[15px] text-[#4A505B]">&copy; Elara. All rights reserved.</div>
+        </div>
+      </footer>
+    </div>
   );
 }
