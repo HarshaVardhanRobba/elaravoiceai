@@ -16,6 +16,7 @@ import {
   MessageNewEvent,
 } from "@stream-io/node-sdk";
 import { and, eq } from "drizzle-orm";
+import { createHash, createHmac } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 const openaiClient = new OpenAI({
@@ -33,6 +34,53 @@ const AGENT_TOKEN_TTL_SECONDS = 3 * 60 * 60;
 const getMeetingId = (call?: { id?: string; custom?: Record<string, unknown> }) =>
   (call?.custom?.meetingId as string | undefined) ?? call?.id;
 
+// Realtime errors are not always Error instances (the OpenAI socket rejects
+// with the raw server message), so flatten anything into loggable JSON.
+const describeError = (err: unknown) => {
+  if (err instanceof Error) {
+    return {
+      name: err.name,
+      message: err.message,
+      code: (err as { code?: unknown }).code,
+      status: (err as { status?: unknown }).status,
+      cause: err.cause instanceof Error ? err.cause.message : err.cause,
+      stack: err.stack?.split("\n").slice(0, 6).join("\n"),
+    };
+  }
+  return err;
+};
+
+// Turns the usual failure strings into a one-line pointer to the real cause.
+const agentFailureHint = (err: unknown) => {
+  const text = JSON.stringify(describeError(err)) ?? String(err);
+  if (/invalid_api_key|incorrect api key|401/i.test(text))
+    return "OpenAI rejected the API key (OPENAI_API_KEY wrong, revoked, or from another project).";
+  if (/insufficient_quota|exceeded your current quota|billing/i.test(text))
+    return "OpenAI account is out of credit/quota. Check billing on platform.openai.com.";
+  if (/model_not_found|does not have access|not have access to model/i.test(text))
+    return "This OpenAI key/project has no access to the Realtime model.";
+  if (/rate_limit/i.test(text)) return "OpenAI rate limit hit.";
+  if (/Closed without any messages/i.test(text))
+    return "Socket closed before any message arrived: Stream or OpenAI refused the connection right away (bad Stream token, bad OpenAI key, or no Realtime access).";
+  if (/Could not connect/i.test(text))
+    return "WebSocket to Stream connect_agent failed (network, Stream API key/secret, or call does not exist).";
+  if (/not connected/i.test(text))
+    return "Socket dropped before updateSession ran, so the connection itself died right after opening.";
+  if (/Already connected/i.test(text)) return "Realtime client was connected twice.";
+  return "No known pattern matched. Send the whole [agent] block above.";
+};
+
+// One realtime agent per meeting per server process. Stream re-sends
+// call.session_started when the first delivery is slow (a cold Next compile),
+// and both deliveries then run at once: each sees no agent in the call yet and
+// connects its own. Kept on globalThis so dev hot reloads do not reset it.
+type AgentSlot = { connecting: boolean; client?: { isConnected(): boolean } };
+const agentSlots = ((globalThis as { __elaraAgentSlots?: Map<string, AgentSlot> })
+  .__elaraAgentSlots ??= new Map<string, AgentSlot>());
+
+// Server events that fire many times per second and would bury the log.
+const NOISY_EVENT = /(\.delta|rate_limits|input_audio_buffer\.append)/;
+
 export async function POST(request: NextRequest) {
   console.log("🔔 Webhook request received");
 
@@ -44,11 +92,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing signature" }, { status: 400 });
     }
 
-    const body = await request.text();
+    // Verify against the exact bytes Stream signed; decoding to a string
+    // first can rewrite invalid UTF-8 and break the HMAC.
+    const rawBody = Buffer.from(await request.arrayBuffer());
+    const body = rawBody.toString("utf8");
 
-    const isValid = streamVideo.verifyWebhook(body, signature);
+    const isValid = streamVideo.verifyWebhook(rawBody, signature);
     if (!isValid) {
-      console.error("❌ Invalid webhook signature");
+      const secret = process.env.STREAM_VIDEO_SECRET_KEY ?? "";
+      console.error("❌ Invalid webhook signature", {
+        eventHeader: request.headers.get("x-webhook-event-type"),
+        apiKeyHeaderMatches:
+          request.headers.get("x-api-key") === process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY,
+        bodyBytes: rawBody.length,
+        contentLength: request.headers.get("content-length"),
+        contentEncoding: request.headers.get("content-encoding"),
+        receivedSignature: signature.slice(0, 12),
+        expectedSignature: createHmac("sha256", secret).update(rawBody).digest("hex").slice(0, 12),
+        secretLength: secret.length,
+        secretFingerprint: createHash("sha256").update(secret).digest("hex").slice(0, 8),
+      });
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -124,9 +187,56 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Agent not found" }, { status: 404 });
       }
 
+      const slot = agentSlots.get(meetingId);
+      if (slot && (slot.connecting || slot.client?.isConnected())) {
+        console.warn(
+          `[agent ${meetingId}] duplicate call.session_started ignored (agent already ${
+            slot.connecting ? "connecting" : "connected"
+          })`
+        );
+        return NextResponse.json({ status: "ignored" });
+      }
+      // No await between the check above and this line, so only one delivery wins.
+      const mySlot: AgentSlot = { connecting: true };
+      agentSlots.set(meetingId, mySlot);
+
+      // Every line of the agent hand-off is tagged [agent] so one grep (or
+      // one copy-paste of the terminal) shows the whole story.
+      const tag = `[agent ${meetingId}]`;
+      let step = "start";
+      const startedAt = Date.now();
+      const at = () => `+${Date.now() - startedAt}ms`;
+
       try {
+        const apiKey = process.env.OPENAI_API_KEY;
+        console.log(`${tag} ${at()} preflight`, {
+          meetingStatus: meeting.status,
+          claimedThisDelivery: Boolean(claimed),
+          agentId: existingAgent.id,
+          agentName: existingAgent.name,
+          instructionsLength: existingAgent.instructions?.length ?? 0,
+          openAiKeyPresent: Boolean(apiKey),
+          openAiKeyShape: apiKey
+            ? `${apiKey.slice(0, 7)}…(${apiKey.length} chars)`
+            : null,
+          streamKeyPresent: Boolean(process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY),
+          streamSecretPresent: Boolean(process.env.STREAM_VIDEO_SECRET_KEY),
+        });
+
+        if (!apiKey) {
+          throw new Error("OPENAI_API_KEY is not set in the server environment");
+        }
+        if (!existingAgent.instructions?.trim()) {
+          console.warn(`${tag} agent has empty instructions; it will join but have no persona`);
+        }
+
+        step = "call.get";
         const call = streamVideo.video.call("default", meetingId);
         const { call: callData } = await call.get();
+        console.log(`${tag} ${at()} call.get ok`, {
+          callCid: callData.cid,
+          participantsNow: callData.session?.participants?.map((p) => p.user.id) ?? [],
+        });
 
         if (!claimed) {
           const agentAlreadyInCall = callData.session?.participants?.some(
@@ -134,37 +244,89 @@ export async function POST(request: NextRequest) {
           );
 
           if (agentAlreadyInCall) {
-            console.warn("⚠️ Agent already in call:", meetingId);
+            console.warn(`${tag} agent already in call, skipping`);
+            if (agentSlots.get(meetingId) === mySlot) agentSlots.delete(meetingId);
             return NextResponse.json({ status: "ignored" });
           }
         }
 
+        step = "connectOpenAi";
+        console.log(`${tag} ${at()} connecting to Stream connect_agent + OpenAI realtime...`);
         const realtimeClient = await streamVideo.video.connectOpenAi({
           call,
-          openAiApiKey: process.env.OPENAI_API_KEY!,
+          openAiApiKey: apiKey,
           agentUserId: existingAgent.id,
           validityInSeconds: AGENT_TOKEN_TTL_SECONDS,
         });
+        console.log(`${tag} ${at()} socket open, connected=${realtimeClient.isConnected()}`);
+        mySlot.connecting = false;
+        mySlot.client = realtimeClient;
 
-        // Without these the socket can drop with nothing in the logs (an
-        // OpenAI-side rejection was exactly how the agent used to vanish
-        // 2-3s after joining).
-        realtimeClient.realtime.on("server.error", (event) => {
-          console.error("❌ OpenAI realtime error", { meetingId, event });
+        // Attached right after connect. Wildcards catch everything OpenAI
+        // sends so the reason for a drop is always in the terminal.
+        realtimeClient.realtime.on("server.error", (event: unknown) => {
+          console.error(`${tag} ${at()} ❌ OpenAI server.error`, JSON.stringify(event));
+          console.error(`${tag} HINT: ${agentFailureHint(event)}`);
         });
-        realtimeClient.realtime.on("close", (event) => {
-          console.warn("⚠️ OpenAI realtime socket closed", { meetingId, event });
+        realtimeClient.realtime.on("close", (event: unknown) => {
+          if (agentSlots.get(meetingId) === mySlot) agentSlots.delete(meetingId);
+          console.warn(
+            `${tag} ${at()} ⚠️ realtime socket CLOSED`,
+            JSON.stringify(event),
+            "(error:true = socket error, error:false = clean close by remote)"
+          );
+        });
+        realtimeClient.realtime.on("server.*", (raw: unknown) => {
+          const event = raw as { type?: string };
+          if (event?.type && NOISY_EVENT.test(event.type)) return;
+          console.log(`${tag} ${at()} ⬇ server`, event?.type, JSON.stringify(event).slice(0, 400));
+        });
+        realtimeClient.realtime.on("client.*", (raw: unknown) => {
+          const event = raw as { type?: string };
+          if (event?.type && NOISY_EVENT.test(event.type)) return;
+          console.log(`${tag} ${at()} ⬆ client`, event?.type, JSON.stringify(event).slice(0, 400));
+        });
+        realtimeClient.on("error", (event: unknown) => {
+          console.error(`${tag} ${at()} ❌ client error`, JSON.stringify(event));
         });
 
         // `model` is not a session option (the realtime model is picked in
         // connectOpenAi), so only the instructions are sent here.
+        step = "updateSession";
+        // turn_detection defaults to null, which means OpenAI never decides
+        // the caller stopped talking and the agent stays silent forever.
         await realtimeClient.updateSession({
           instructions: existingAgent.instructions,
+          turn_detection: { type: "server_vad" },
         });
+        console.log(`${tag} ${at()} updateSession sent`);
 
-        console.log("🤖 OpenAI realtime agent connected");
+        // Nothing triggers a reply until someone speaks, so open the call
+        // with a short spoken greeting.
+        step = "greeting";
+        realtimeClient.sendUserMessageContent([
+          {
+            type: "input_text",
+            text: "Greet the participants in one short sentence and introduce yourself.",
+          },
+        ]);
+        console.log(`${tag} ${at()} greeting requested`);
+
+        // Heartbeat: shows whether the agent is still alive after the usual
+        // 2-3s drop window and after it should have greeted.
+        for (const delay of [3000, 10000]) {
+          setTimeout(() => {
+            console.log(
+              `${tag} ${at()} still connected? ${realtimeClient.isConnected()} (checked ${delay / 1000}s after connect)`
+            );
+          }, delay);
+        }
+
+        console.log(`${tag} ${at()} 🤖 OpenAI realtime agent connected`);
       } catch (err) {
-        console.error("❌ Failed to connect OpenAI realtime:", err);
+        console.error(`${tag} ${at()} ❌ FAILED at step "${step}"`, describeError(err));
+        console.error(`${tag} HINT: ${agentFailureHint(err)}`);
+        if (agentSlots.get(meetingId) === mySlot) agentSlots.delete(meetingId);
         await releaseClaim();
         return NextResponse.json(
           { error: "Failed to connect agent" },
