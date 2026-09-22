@@ -102,7 +102,7 @@ export const CallConnect = ({
 
     if (connectError) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-background px-4">
+            <div className="app-glow flex min-h-screen items-center justify-center px-4">
                 <div className="w-full max-w-md">
                     <ErrorState
                         title="Couldn't connect to the call"
@@ -115,7 +115,7 @@ export const CallConnect = ({
 
     if(!Client || !call) {
         return (
-            <div className="flex h-screen w-screen items-center justify-center bg-linear-to-br from-emerald-900 via-green-900 to-teal-900">
+            <div className="flex h-screen w-screen items-center justify-center app-glow">
                     <Loader2Icon className="h-6 w-6 animate-spin text-white/80" />
             </div>
         )

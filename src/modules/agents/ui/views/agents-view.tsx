@@ -24,10 +24,10 @@ export const AgentsView = () => {
   );
 
   return (
-    <div className="flex-1 w-full px-4 md:px-8 py-6">
+    <div className="flex-1 w-full px-4 md:px-8 py-4">
       <div className="max-w-6xl mx-auto space-y-6">
 
-        <div className="overflow-x-auto rounded-lg border bg-background shadow-sm">
+        <div className="overflow-x-auto">
           <DataTable
             data={data.items}
             columns={columns}

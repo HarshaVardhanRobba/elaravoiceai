@@ -11,8 +11,8 @@ export const LoadingState = ({
 }: LoadingStateProps) => {
   return (
     <div className="flex flex-1 py-4 px-8 items-center justify-center">
-      <div className="flex w-full max-w-xs flex-col items-center gap-y-6 rounded-lg border bg-background p-6 shadow-sm">
-        <Loader2Icon className="mb-4 h-6 w-6 animate-spin text-emerald-500" />
+      <div className="flex w-full max-w-xs flex-col items-center gap-y-6 glass rounded-3xl p-6">
+        <Loader2Icon className="mb-4 h-6 w-6 animate-spin text-brand" />
 
         <h6 className="mb-1 text-md font-large text-foreground">
           {title}

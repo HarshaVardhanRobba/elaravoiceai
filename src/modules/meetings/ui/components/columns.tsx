@@ -24,11 +24,11 @@ const StatusIconMap = {
 }
 
 const StatusStyleMap = {
-  pending: "border-gray-300 text-gray-600",
-  active: "border-yellow-400 text-yellow-700",
-  completed: "border-green-400 text-green-700",
-  upcomming: "border-blue-400 text-blue-700",
-  cancelled: "border-red-400 text-red-700",
+  pending: "border-transparent bg-white/10 text-stone-300",
+  active: "border-transparent bg-amber-400/15 text-amber-300",
+  completed: "border-transparent bg-emerald-400/15 text-emerald-300",
+  upcomming: "border-transparent bg-sky-400/15 text-sky-300",
+  cancelled: "border-transparent bg-rose-400/15 text-rose-300",
 }
 
 export const columns: ColumnDef<MeetingsGetMany[number]>[] = [
@@ -37,7 +37,7 @@ export const columns: ColumnDef<MeetingsGetMany[number]>[] = [
     header: "Meeting",
     cell: ({ row }) => (
       <div className="flex flex-col gap-1">
-        <span className="font-medium text-gray-900">
+        <span className="font-semibold text-foreground">
           {row.original.name}
         </span>
 
@@ -57,7 +57,7 @@ export const columns: ColumnDef<MeetingsGetMany[number]>[] = [
           </div>
 
           {row.original.startedAt && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted-foreground">
               • {format(row.original.startedAt, "MMM d")}
             </span>
           )}
@@ -99,9 +99,9 @@ export const columns: ColumnDef<MeetingsGetMany[number]>[] = [
     cell: ({ row }) => (
       <Badge
         variant="outline"
-        className="flex items-center gap-1 border-gray-300 text-gray-700"
+        className="flex items-center gap-1 border-transparent bg-white/10 text-foreground/80"
       >
-        <ClockFadingIcon className="w-4 h-4 text-gray-500" />
+        <ClockFadingIcon className="w-4 h-4 text-muted-foreground" />
         {row.original.duration
           ? formatDuration(row.original.duration)
           : "Not started"}

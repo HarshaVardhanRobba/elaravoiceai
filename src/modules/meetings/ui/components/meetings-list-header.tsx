@@ -34,14 +34,19 @@ export const MeetingsListHeader = () => {
         onOpenChange={setIsDialogOpen}
       />
 
-      <div className="w-full px-4 py-4 md:px-8 space-y-5">
+      <div className="mx-auto w-full max-w-6xl space-y-5 px-4 pb-2 pt-2 md:px-8">
 
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
 
-          <h1 className="text-2xl font-bold tracking-tight">
-            Meetings
-          </h1>
+          <div>
+            <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
+              Meetings
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Every call, transcript and summary in one place.
+            </p>
+          </div>
 
           <Button
             onClick={() => setIsDialogOpen(true)}

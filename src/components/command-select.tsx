@@ -48,7 +48,7 @@ export function CommandSelect({
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm",
+          "flex h-9 w-full items-center justify-between rounded-full border border-input bg-white/5 px-4 text-sm",
           !selectedOption && "text-muted-foreground",
           className
         )}

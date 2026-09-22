@@ -15,7 +15,7 @@ export const DataPagination = ({
     const isLastPage = page >= totalPages;
 
     return (
-        <div className="flex items-center justify-between border-t bg-white px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between px-1 py-3">
             {/* Mobile */}
             <div className="flex w-full items-center justify-between sm:hidden">
                 <span className="text-sm text-muted-foreground">
@@ -24,7 +24,7 @@ export const DataPagination = ({
 
                 <div className="flex gap-2">
                     <Button
-                        variant="default"
+                        variant="outline"
                         size="sm"
                         disabled={isFirstPage}
                         onClick={() => onPageChange(page - 1)}
@@ -32,7 +32,7 @@ export const DataPagination = ({
                         Previous
                     </Button>
                     <Button
-                        variant="default"
+                        variant="outline"
                         size="sm"
                         disabled={isLastPage || totalPages === 0}
                         onClick={() => onPageChange(page + 1)}
@@ -51,7 +51,7 @@ export const DataPagination = ({
 
                 <div className="flex gap-2">
                     <Button
-                        variant="default"
+                        variant="outline"
                         size="sm"
                         disabled={isFirstPage}
                         onClick={() => onPageChange(page - 1)}
@@ -59,7 +59,7 @@ export const DataPagination = ({
                         Previous
                     </Button>
                     <Button
-                        variant="default"
+                        variant="outline"
                         size="sm"
                         disabled={isLastPage || totalPages === 0}
                         onClick={() => onPageChange(page + 1)}

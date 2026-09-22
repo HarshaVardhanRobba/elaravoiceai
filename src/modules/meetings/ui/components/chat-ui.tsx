@@ -95,8 +95,8 @@ export const ChatUI = ({
   }
 
   return (
-  <div className="flex h-[calc(100vh-80px)] w-full flex-col overflow-hidden rounded-xl border bg-white shadow-sm">
-    <Chat client={client}>
+  <div className="flex h-[calc(100vh-80px)] w-full flex-col overflow-hidden glass rounded-3xl">
+    <Chat client={client} theme="str-chat__theme-dark">
       <Channel channel={channel}>
         <div className="flex h-full w-full">
 

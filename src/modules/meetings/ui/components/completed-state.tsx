@@ -35,10 +35,10 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
             >
                 {/* Tabs header */}
                 <ScrollArea>
-                    <TabsList className="mb-6 h-auto gap-2 bg-transparent p-0">
+                    <TabsList className="mb-6 h-auto gap-1 rounded-full bg-white/8 p-1">
                         <TabsTrigger
                             value="summary"
-                            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium data-[state=active]:bg-muted"
+                            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-white/15 data-[state=active]:text-foreground"
                         >
                             <BookOpenTextIcon className="h-4 w-4" />
                             Summary
@@ -46,7 +46,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
 
                         <TabsTrigger
                             value="transcript"
-                            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium data-[state=active]:bg-muted"
+                            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-white/15 data-[state=active]:text-foreground"
                         >
                             <FileTextIcon className="h-4 w-4" />
                             Transcript
@@ -54,7 +54,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
 
                         <TabsTrigger
                             value="recording"
-                            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium data-[state=active]:bg-muted"
+                            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-white/15 data-[state=active]:text-foreground"
                         >
                             <FileTextIcon className="h-4 w-4" />
                             Recording
@@ -62,7 +62,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
 
                         <TabsTrigger
                             value="chat"
-                            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium data-[state=active]:bg-muted"
+                            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-white/15 data-[state=active]:text-foreground"
                         >
                             <SparklesIcon className="h-4 w-4" />
                             Ask AI
@@ -86,7 +86,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
 
                 {/* Recording */}
                 <TabsContent value="recording">
-                    <div className="rounded-lg border bg-background p-4">
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
                         <video
                             src={data.recordingUrl!}
                             controls
@@ -100,7 +100,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
                     <div className="space-y-6">
                         {/* Title */}
                         <div className="space-y-1">
-                            <h2 className="text-2xl font-semibold">
+                            <h2 className="font-display text-2xl font-semibold tracking-tight">
                                 {data.name}
                             </h2>
 
@@ -126,7 +126,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
                                         : ""}
                                 </span>
 
-                                <Badge variant="outline" className="gap-1">
+                                <Badge variant="outline" className="gap-1 border-transparent bg-white/10">
                                     <ClockFadingIcon className="h-3 w-3" />
                                     {data.duration
                                         ? formatDuration(data.duration)
@@ -142,7 +142,7 @@ export const CompletedState = ({ data }: CompletedStateProps) => {
                         </div>
 
                         {/* Summary content */}
-                        <div className="rounded-lg border bg-muted/30 p-5">
+                        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
                             <Markdown
                                 components={{
                                     h1: (props) => (

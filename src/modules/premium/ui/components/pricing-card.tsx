@@ -11,16 +11,16 @@ import { Badge } from "@/components/ui/badge";
 ========================= */
 
 const pricingCardVariants = cva(
-  "flex h-full flex-col justify-between rounded-2xl border p-6 transition-all duration-300",
+  "flex h-full flex-col justify-between rounded-[28px] border p-7 transition-all duration-300",
   {
     variants: {
       variant: {
         default:
-          "border-gray-200 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg",
+          "glass hover:-translate-y-1 hover:bg-white/10",
         premium:
-          "border-gray-300 bg-white shadow-md hover:-translate-y-1 hover:shadow-xl",
+          "glass shadow-md hover:-translate-y-1 hover:bg-white/10",
         highlighted:
-          "border-emerald-800 bg-gradient-to-br from-[#0b3f26] to-[#051b16] text-white shadow-xl scale-105",
+          "border-white/15 bg-gradient-to-br from-[#e8672a] to-[#7a2e10] text-white shadow-xl scale-105",
       },
     },
     defaultVariants: {
@@ -34,8 +34,8 @@ const pricingTitleVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-gray-900",
-        premium: "text-gray-900",
+        default: "text-foreground",
+        premium: "text-foreground",
         highlighted: "text-white",
       },
     },
@@ -47,9 +47,9 @@ const pricingDescriptionVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-gray-500",
-        premium: "text-gray-500",
-        highlighted: "text-emerald-100",
+        default: "text-muted-foreground",
+        premium: "text-muted-foreground",
+        highlighted: "text-white/80",
       },
     },
   }
@@ -60,8 +60,8 @@ const pricingPriceVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-gray-900",
-        premium: "text-gray-900",
+        default: "text-foreground",
+        premium: "text-foreground",
         highlighted: "text-white",
       },
     },
@@ -73,9 +73,9 @@ const pricingSuffixVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-gray-500",
-        premium: "text-gray-500",
-        highlighted: "text-emerald-200",
+        default: "text-muted-foreground",
+        premium: "text-muted-foreground",
+        highlighted: "text-white/70",
       },
     },
   }
@@ -86,9 +86,9 @@ const pricingFeatureTextVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-gray-700",
-        premium: "text-gray-700",
-        highlighted: "text-emerald-100",
+        default: "text-foreground/80",
+        premium: "text-foreground/80",
+        highlighted: "text-white/80",
       },
     },
   }
@@ -99,9 +99,9 @@ const pricingIconVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-green-500",
-        premium: "text-green-500",
-        highlighted: "text-emerald-400",
+        default: "text-brand",
+        premium: "text-brand",
+        highlighted: "text-white",
       },
     },
   }
@@ -112,9 +112,9 @@ const pricingBadgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gray-100 text-gray-600",
-        premium: "bg-gray-100 text-gray-600",
-        highlighted: "bg-white text-emerald-900",
+        default: "bg-white/10 text-muted-foreground",
+        premium: "bg-white/10 text-muted-foreground",
+        highlighted: "bg-white text-[#7a2e10]",
       },
     },
   }
@@ -218,7 +218,7 @@ export const PricingCard = ({
             className={cn(
               "w-full",
               variant === "highlighted" &&
-                "bg-green-500 hover:bg-green-600 text-white border-none"
+                "bg-white text-[#16140f] hover:bg-white/90 border-none"
             )}
             size="lg"
             variant={
@@ -241,8 +241,8 @@ export const PricingCard = ({
           className={cn(
             "mb-4 text-sm font-semibold tracking-wide",
             variant === "highlighted"
-              ? "text-emerald-200"
-              : "text-gray-700"
+              ? "text-white/70"
+              : "text-muted-foreground"
           )}
         >
           FEATURES

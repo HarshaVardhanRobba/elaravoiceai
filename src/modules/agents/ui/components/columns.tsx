@@ -27,7 +27,7 @@ export const columns: ColumnDef<AgentsGetMany[number]>[] = [
             variant="botttsNeutral"
             className="w-9 h-9"
           />
-          <span className="font-semibold">{row.original.name}</span>
+          <span className="font-semibold text-foreground">{row.original.name}</span>
         </div>
         <div className="flex items-center gap-x-2">
           <CornerDownRightIcon className="w-3 h-3 text-muted-foreground" />
@@ -42,8 +42,8 @@ export const columns: ColumnDef<AgentsGetMany[number]>[] = [
     accessorKey: "meetingsCount",
     header: "Meetings",
     cell: ({ row }) => (
-      <Badge variant="outline" className="flex items-center gap-x-2">
-        <VideoIcon className="w-4 h-4 text-blue-800" />
+      <Badge variant="outline" className="flex items-center gap-x-2 border-transparent bg-brand-soft text-brand">
+        <VideoIcon className="w-4 h-4" />
         {row.original.meetingsCount} Meeting{row.original.meetingsCount !== 1 ? "s" : ""}
       </Badge>
     ),

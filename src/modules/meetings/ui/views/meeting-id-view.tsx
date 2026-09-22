@@ -93,8 +93,8 @@ export const MeetingIdView = ({ meetingsId }: MeetingIdViewProps) => {
       initialvalues={data}
     />
 
-    <div className="min-h-[calc(100vh-80px)] w-full bg-gray-50">
-      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-80px)] w-full">
+      <div className="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="mb-6">
@@ -107,7 +107,7 @@ export const MeetingIdView = ({ meetingsId }: MeetingIdViewProps) => {
         </div>
 
         {/* Status Content */}
-        <div className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+        <div className="glass rounded-[28px] p-4 sm:p-6">
           {isCancelled && <CancelledState />}
           {isCompleted && <CompletedState data={data} />}
           {isPending && <PendingState />}

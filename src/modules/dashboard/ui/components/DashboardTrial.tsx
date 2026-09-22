@@ -6,7 +6,6 @@ import {
 } from "@/modules/premium/constants";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
-import { RocketIcon } from "lucide-react";
 import Link from "next/link";
 
 export const DashboardTrial = () => {
@@ -22,43 +21,46 @@ export const DashboardTrial = () => {
     (data.meetingsCount / MAX_FREE_MEETINGS) * 100;
 
   return (
-    <div className="w-56 rounded-xl border border-emerald-700/40 bg-gradient-to-b from-emerald-900 to-emerald-950 p-4 text-sm text-emerald-100 shadow-md">
-      
+    <div className="w-full rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-sidebar-foreground">
+
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
-        <RocketIcon className="h-4 w-4 text-emerald-400" />
-        <p className="font-medium">Free Trial</p>
+      <div className="mb-4 flex items-center justify-between">
+        <p className="font-semibold text-white">Free trial</p>
+        <span className="rounded-full bg-highlight-soft px-2.5 py-0.5 text-[11px] font-medium text-highlight">
+          Free plan
+        </span>
       </div>
 
       {/* Agents */}
-      <div className="mb-4">
-        <p className="text-xs text-emerald-300 mb-1">
-          {data.agentsCount}/{MAX_FREE_AGENTS} Agents
+      <div className="mb-3">
+        <p className="mb-1.5 flex justify-between text-xs text-sidebar-foreground/60">
+          <span>Agents</span>
+          <span>
+            {data.agentsCount}/{MAX_FREE_AGENTS}
+          </span>
         </p>
         <Progress
           value={agentsPercent}
-          className="h-2 bg-emerald-800"
+          className="h-1.5 bg-white/10 [&>div]:bg-brand"
         />
       </div>
 
       {/* Meetings */}
       <div className="mb-4">
-        <p className="text-xs text-emerald-300 mb-1">
-          {data.meetingsCount}/{MAX_FREE_MEETINGS} Meetings
+        <p className="mb-1.5 flex justify-between text-xs text-sidebar-foreground/60">
+          <span>Meetings</span>
+          <span>
+            {data.meetingsCount}/{MAX_FREE_MEETINGS}
+          </span>
         </p>
         <Progress
           value={meetingsPercent}
-          className="h-2 bg-emerald-800"
+          className="h-1.5 bg-white/10 [&>div]:bg-brand"
         />
       </div>
 
       {/* Upgrade Button */}
-      <Button
-        asChild
-        size="sm"
-        variant="secondary"
-        className="w-full bg-emerald-700 hover:bg-emerald-600 text-white"
-      >
+      <Button asChild size="sm" className="w-full">
         <Link href="/upgrade">
           Upgrade
         </Link>

@@ -12,7 +12,7 @@ export const ErrorState = ({
 }: ErrorStateProps) => {
   return (
     <div className="flex flex-1 py-4 px-8 items-center justify-center">
-      <div className="flex w-full max-w-xs flex-col items-center gap-y-6 rounded-lg border bg-background p-6 shadow-sm">
+      <div className="flex w-full max-w-xs flex-col items-center gap-y-6 glass rounded-3xl p-6">
         <AlertCircleIcon className="mb-4 h-6 w-6 text-rose-500" />
 
         <h6 className="mb-1 text-md font-large text-foreground">

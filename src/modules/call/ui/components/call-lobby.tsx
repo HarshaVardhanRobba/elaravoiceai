@@ -57,13 +57,13 @@ export const CallLobby = ({ onJoin, isJoining = false }: CallLobbyProps) => {
     hasMicPermission && hasCameraPermission;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
-      <div className="w-full max-w-xl rounded-2xl border bg-card shadow-lg p-6 sm:p-8">
+    <div className="app-glow flex min-h-screen items-center justify-center px-4 py-8">
+      <div className="w-full max-w-xl glass rounded-[28px] shadow-[0_20px_60px_rgba(0,0,0,0.35)] p-6 sm:p-8">
         <div className="flex flex-col gap-6">
 
           {/* Header */}
           <div className="text-center space-y-1">
-            <h2 className="text-xl sm:text-2xl font-semibold">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">
               Ready to join
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -93,14 +93,14 @@ export const CallLobby = ({ onJoin, isJoining = false }: CallLobbyProps) => {
             <button
               onClick={onJoin}
               disabled={!hasBrowserMediaPermission || isJoining}
-              className="w-full rounded-lg bg-primary text-primary-foreground py-2.5 font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-full bg-primary text-primary-foreground py-3 font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isJoining ? "Joining..." : "Join Call"}
             </button>
 
             <Link
               href="/meetings"
-              className="w-full text-center rounded-lg bg-destructive text-destructive-foreground py-2.5 font-medium transition hover:opacity-90"
+              className="w-full text-center rounded-full border border-white/15 bg-white/5 text-foreground py-3 font-medium transition hover:opacity-90"
             >
               Leave
             </Link>

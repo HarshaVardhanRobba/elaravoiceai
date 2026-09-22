@@ -34,20 +34,20 @@ export const UpgradeView = () => {
   });
 
   return (
-  <div className="min-h-screen bg-gray-50">
+  <div className="min-h-screen">
     <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
 
       {/* Heading */}
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className="text-2xl font-semibold text-gray-900 sm:text-3xl">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           You are on the{" "}
-          <span className="text-green-600 font-bold">
+          
             {currentSubscription?.name ?? "Free"}
-          </span>{" "}
+          {" "}
           plan
         </h1>
 
-        <p className="mt-3 text-sm text-gray-500 sm:text-base">
+        <p className="mt-3 text-sm text-muted-foreground sm:text-base">
           Choose a plan that fits your needs.
         </p>
       </div>

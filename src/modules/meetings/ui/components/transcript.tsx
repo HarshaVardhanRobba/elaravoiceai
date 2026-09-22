@@ -46,7 +46,7 @@ export const Transcript = ({ meetingId }: TranscriptProps) => {
 
       {/* Messages */}
       <ScrollArea className="h-[400px] pr-4">
-        <div className="space-y-4">
+        <div className="space-y-5">
           {filteredData.map((item) => (
             <div
               key={item.start_ts}
@@ -81,8 +81,8 @@ export const Transcript = ({ meetingId }: TranscriptProps) => {
                 </div>
 
                 <Highlighter
-                  className="text-sm text-muted-foreground"
-                  highlightClassName="bg-yellow-200"
+                  className="text-sm leading-relaxed text-foreground/80"
+                  highlightClassName="bg-highlight/30 text-foreground"
                   searchWords={searchQuery ? [searchQuery] : []}
                   autoEscape
                   textToHighlight={item.text}

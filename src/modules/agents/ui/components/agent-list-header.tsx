@@ -27,9 +27,16 @@ export const AgentsListHeader = () => {
         <>
         <NewAgentDialog
             open={isDialogOpen} onOpenChange={setIsDialogOpen} />
-        <div className="p-4 md:px-8 flex flex-col gap-y-4 w-full">
-            <div className="flex items-center justify-between">
-                <h5 className="text-xl font-extrabold">Agents</h5>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-y-5 px-4 pb-2 pt-2 md:px-8">
+            <div className="flex items-end justify-between gap-4">
+                <div>
+                    <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
+                        Agents
+                    </h1>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        The voice agents that join your meetings.
+                    </p>
+                </div>
                 <Button onClick={() => setIsDialogOpen(true)} variant="default">
                     <PlusIcon />
                     New Agent
@@ -41,7 +48,7 @@ export const AgentsListHeader = () => {
                 {isAnyFilterModified && 
                     (
                         <Button 
-                            size="sm" variant="default" onClick={onClearFilters}
+                            size="sm" variant="outline" onClick={onClearFilters}
                         >
                             <XCircleIcon />
                             Clear Filters

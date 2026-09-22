@@ -73,7 +73,7 @@ export const AgentIdview = ({ agentId }: AgentIDviewProps) => {
         initialvalues={data}
       />
 
-      <div className="bg-muted/30 min-h-full py-6 px-4 md:px-8">
+      <div className="min-h-full px-4 py-6 md:px-8">
         <div className="max-w-3xl mx-auto space-y-6">
           <AgentIDviewHeader
             agentId={agentId}
@@ -82,37 +82,36 @@ export const AgentIdview = ({ agentId }: AgentIDviewProps) => {
             onremove={handleRemoveAgent}
           />
 
-          <div className="rounded-xl border bg-background shadow-sm p-5 sm:p-6">
-            <div className="space-y-5">
-              <div className="flex items-center gap-3">
-                <GeneratedAvatar
-                  seed={data.name}
-                  variant="botttsNeutral"
-                  className="size-10 shrink-0"
-                />
-                <h2 className="text-lg font-semibold">
+          <div className="glass overflow-hidden rounded-[28px]">
+            <div className="relative flex flex-wrap items-center gap-4 overflow-hidden bg-[radial-gradient(70%_140%_at_90%_0%,rgba(232,103,42,0.55),transparent_62%)] p-6 sm:p-8">
+              <GeneratedAvatar
+                seed={data.name}
+                variant="botttsNeutral"
+                className="size-16 shrink-0 border-2 border-white/30"
+              />
+              <div className="min-w-0 flex-1">
+                <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
                   {data.name}
                 </h2>
+                <div className="mt-2 flex items-center gap-2 text-sm">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 font-medium text-foreground">
+                    <VideoIcon className="h-4 w-4 text-brand" />
+                    {data.meetingsCount}{" "}
+                    {data.meetingsCount === 1
+                      ? "meeting"
+                      : "meetings"}
+                  </span>
+                </div>
               </div>
+            </div>
 
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <VideoIcon className="h-4 w-4 text-primary" />
-                <span>
-                  {data.meetingsCount}{" "}
-                  {data.meetingsCount === 1
-                    ? "meeting"
-                    : "meetings"}
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium">
-                  Instructions
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed break-words whitespace-pre-wrap">
-                  {data.instructions}
-                </p>
-              </div>
+            <div className="space-y-2 border-t border-white/10 p-6 sm:p-8">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                Instructions
+              </h3>
+              <p className="text-[15px] leading-relaxed break-words whitespace-pre-wrap text-foreground/85">
+                {data.instructions}
+              </p>
             </div>
           </div>
         </div>

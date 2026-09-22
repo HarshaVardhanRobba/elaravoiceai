@@ -26,8 +26,8 @@ export const MeetingsView = () => {
   const isEmpty = data.items.length === 0;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] w-full bg-gray-50">
-      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-80px)] w-full">
+      <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
 
         {isEmpty ? (
           <div className="flex items-center justify-center py-16">
@@ -40,7 +40,7 @@ export const MeetingsView = () => {
           <div className="space-y-6">
 
             {/* Table Container */}
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div>
               <DataTable
                 data={data.items}
                 columns={columns}

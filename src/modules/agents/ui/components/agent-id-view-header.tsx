@@ -31,7 +31,7 @@ export const AgentIDviewHeader = ({
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink asChild className="font-medium text-2xl">
+                            <BreadcrumbLink asChild className="font-display text-2xl font-semibold tracking-tight text-muted-foreground">
                                 <Link href="/agents">My Agents
                                 </Link>
                             </BreadcrumbLink>
@@ -40,7 +40,7 @@ export const AgentIDviewHeader = ({
                             <ChevronRightIcon className="h-4 w-4" />
                         </BreadcrumbSeparator>
                         <BreadcrumbItem>
-                            <BreadcrumbLink asChild className="font-medium text-2xl text-foreground">
+                            <BreadcrumbLink asChild className="font-display text-2xl font-semibold tracking-tight text-foreground">
                                 <Link href={`/agents/${agentId}`}>
                                     {agentname}
                                 </Link>
@@ -58,14 +58,14 @@ export const AgentIDviewHeader = ({
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button 
-                            variant="ghost" size="lg"
+                            variant="outline" size="icon"
                         >
                             <MoreVerticalIcon/>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={onEdit}>
-                            <PencilIcon className="mr-2 h-4 w-4 text-black" />
+                            <PencilIcon className="mr-2 h-4 w-4 text-foreground" />
                             Edit
                         </DropdownMenuItem>
 
