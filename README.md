@@ -7,7 +7,7 @@
 
 <p><strong>Meet with AI. Talk in real time. Revisit every call.</strong></p>
 
-<p>An AI voice-agent meeting platform. Create an agent, call it live with OpenAI Realtime over Stream Video, then get the recording, a full transcript, a written summary, and a chat to ask about anything that was said.</p>
+<p>An AI voice-agent meeting platform — create custom agents, call them live with OpenAI Realtime over Stream Video, then get automatic transcripts, recordings, summaries, and an "Ask AI" chat about any past meeting.</p>
 
 <p>
   <a href="#features">Features</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
@@ -39,7 +39,7 @@
 
 <br />
 
-> Give an agent a persona, join a video call where it listens and talks back as the call happens, and when you hang up you get a recording, a transcript, and a summary. The same agent then answers your questions about the meeting afterwards.
+> Build an AI agent with its own persona, join a live video call where the agent listens and speaks back in real time, and when the call ends get a recording, a full transcript, and a GPT-written summary — then keep asking the agent questions about what was said.
 
 ---
 
@@ -49,41 +49,41 @@
   <tr>
     <td width="50%" valign="top">
       <strong>Live voice agents</strong><br />
-      An AI agent joins the call, hears you, and replies out loud through OpenAI Realtime. Stream wires the audio to OpenAI, so there is no WebSocket code to maintain.
+      Join a video call with an AI agent that hears and replies in real time through OpenAI Realtime, wired into the call by Stream — no custom WebSocket plumbing.
     </td>
     <td width="50%" valign="top">
       <strong>Custom personas</strong><br />
-      Each agent has a name and a block of instructions. That same persona runs the live call and the chat afterwards.
+      Each agent carries its own name and instructions. The same persona drives the live call and the post-call chat.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <strong>Transcripts and recordings</strong><br />
-      Stream records and transcribes every call. The URLs arrive by webhook and get stored on the meeting.
+      <strong>Automatic transcripts & recordings</strong><br />
+      Stream transcribes and records every call; the URLs are captured by webhook and stored against the meeting.
     </td>
     <td width="50%" valign="top">
-      <strong>Written summaries</strong><br />
-      Once the transcript lands, an Inngest job parses it, names each speaker, and writes a Markdown summary with <code>gpt-4o-mini</code>.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>Ask about past meetings</strong><br />
-      Every finished meeting has its own chat channel. The agent answers follow-up questions from the summary and the last few messages.
-    </td>
-    <td width="50%" valign="top">
-      <strong>Safe under retries</strong><br />
-      Webhooks claim the meeting atomically and guard the agent slot, so a redelivered event never connects a second agent or loses a transcript.
+      <strong>AI summaries</strong><br />
+      When the transcript is ready, an Inngest background job parses it, labels each speaker, and writes a Markdown summary with <code>gpt-4o-mini</code>.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <strong>Typed front to back</strong><br />
-      tRPC, TanStack Query, and Zod run from Postgres to React. Agent and meeting lists page, search, and filter.
+      <strong>Ask AI about past meetings</strong><br />
+      Every completed meeting gets a chat channel. The agent answers follow-up questions using the summary plus recent chat history.
     </td>
     <td width="50%" valign="top">
-      <strong>Auth and billing</strong><br />
-      Better Auth (GitHub, Google, email and password) scopes every record to its owner. Polar runs the upgrade flow.
+      <strong>Durable, idempotent pipeline</strong><br />
+      Webhooks use atomic DB claims and agent-slot guards so redelivered events never spawn a second agent or lose a transcript.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Type-safe end to end</strong><br />
+      tRPC + TanStack Query + Zod from the database to the React client, with paginated, searchable, filterable agent and meeting lists.
+    </td>
+    <td width="50%" valign="top">
+      <strong>Auth & billing built in</strong><br />
+      Better Auth (GitHub, Google, email/password) scopes every record to its owner; Polar powers the upgrade / Pro flow.
     </td>
   </tr>
 </table>
