@@ -15,13 +15,12 @@ import { loadSearchParams } from "@/modules/meetings/params";
 import { SearchParams } from "nuqs";
 
 interface MeetingPageProps {
-  SearchParams: Promise<SearchParams>;
-
+  searchParams: Promise<SearchParams>;
 }
 
-const Page = async ({ SearchParams }: MeetingPageProps) => {
+const Page = async ({ searchParams }: MeetingPageProps) => {
 
-  const filters = await loadSearchParams( SearchParams);
+  const filters = await loadSearchParams(searchParams);
 
   const session = await auth.api.getSession({
         headers: await headers(),
