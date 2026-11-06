@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { agents, meetings } from "@/db/schema";
 import { AgentSchema, AgentUpdateSchema } from "../schemas";
 import { z } from "zod";
-import { and, count, desc, eq, getTableColumns, like, sql } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, like } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
 

@@ -81,6 +81,15 @@ const agentSlots = ((globalThis as { __elaraAgentSlots?: Map<string, AgentSlot> 
 // Server events that fire many times per second and would bury the log.
 const NOISY_EVENT = /(\.delta|rate_limits|input_audio_buffer\.append)/;
 
+// Warmup. In `next dev` the route is compiled on first hit (several seconds),
+// and Stream's webhook retries hammer the still-compiling route with deliveries
+// whose body arrives empty, so the HMAC is computed over 0 bytes and fails.
+// Hit this once (open the URL, or `curl`) before starting a call to pre-compile
+// the module so the first real webhook verifies. No-op in production.
+export async function GET() {
+  return NextResponse.json({ status: "warm" });
+}
+
 export async function POST(request: NextRequest) {
   console.log("🔔 Webhook request received");
 
